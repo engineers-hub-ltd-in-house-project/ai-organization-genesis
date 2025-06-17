@@ -69,23 +69,124 @@ pip install -r requirements.txt
 
 ### Usage
 
-1. **AI組織に接続**
-   ```bash
-   tmux attach -t ai-org
-   ```
+#### 1. 基本的な起動と接続
 
-2. **ウィンドウ間の移動**
-   - `Ctrl+B` → 数字キー (0-7)
+```bash
+# AI組織を起動
+./ai-org-master.sh start
 
-3. **ウィンドウ構成**
-   - Window 0: Control Center - コマンド実行
-   - Window 1: AI-CEO - 戦略立案
-   - Window 2: AI-CTO - 技術統括
-   - Window 3: AI-Frontend - UI開発
-   - Window 4: AI-Backend - API開発
-   - Window 5: AI-DevOps - インフラ管理
-   - Window 6: AI-QA - 品質保証
-   - Window 7: Monitor - 監視ダッシュボード
+# tmuxセッションに接続
+tmux attach -t ai-org
+```
+
+#### 2. tmux操作ガイド
+
+**ウィンドウ切り替え**: `Ctrl+B` → 数字キー
+
+| キー | ウィンドウ | 役割 |
+|------|------------|------|
+| 0 | Control Center | コマンド実行・プロジェクト管理 |
+| 1 | AI-CEO | 戦略立案・要件定義 |
+| 2 | AI-CTO | 技術アーキテクチャ設計 |
+| 3 | AI-Frontend | UI/UX開発 |
+| 4 | AI-Backend | API・サーバーサイド開発 |
+| 5 | AI-DevOps | インフラ・CI/CD構築 |
+| 6 | AI-QA | テスト自動化・品質保証 |
+| 7 | Monitor | リアルタイム監視ダッシュボード |
+
+**その他のtmuxコマンド**:
+- `Ctrl+B` → `D`: セッションから離脱（バックグラウンドで継続）
+- `Ctrl+B` → `[`: スクロールモード（`q`で終了）
+- `Ctrl+B` → `c`: 新しいウィンドウ作成
+- `Ctrl+B` → `x`: 現在のペインを閉じる
+
+#### 3. プロジェクトの作成と開発
+
+**新規プロジェクトの開始**（Control Centerで実行）:
+
+```bash
+# Webアプリケーション開発
+cd ai-org
+python3 ai-collaboration-system.py create-workflow --project "my-ecommerce-site" --type "web-app"
+
+# REST API開発
+python3 ai-collaboration-system.py create-workflow --project "user-api" --type "api"
+
+# CLIツール開発
+python3 ai-collaboration-system.py create-workflow --project "deploy-tool" --type "cli-tool"
+```
+
+#### 4. AIエージェントの操作
+
+各エージェントウィンドウで利用可能なコマンド:
+
+```bash
+# 割り当てられたタスクを確認
+tasks
+
+# 自動実行モードを開始（AIがタスクを自動処理）
+start
+
+# エージェントを終了
+quit
+```
+
+**実行例**（AI-CEOウィンドウ）:
+```bash
+ai-ceo> tasks
+📋 Product Vision & Requirements (Status: pending)
+📋 Market Analysis Report (Status: pending)
+
+ai-ceo> start
+🚀 Starting ai-ceo agent loop...
+🤖 ai-ceo executing task: Product Vision & Requirements
+✅ ai-ceo completed task: Product Vision & Requirements
+```
+
+#### 5. プロジェクト進捗の確認
+
+**監視ダッシュボード**（Window 7）:
+- タスクの進捗状況をリアルタイム表示
+- 各エージェントの作業負荷を可視化
+- プロジェクトの完了率を確認
+
+**デイリースタンドアップレポート**:
+```bash
+cd ai-org
+python3 ai-collaboration-system.py standup
+```
+
+#### 6. 実践的なワークフロー例
+
+**ECサイト構築プロジェクト**:
+
+```bash
+# 1. プロジェクト作成
+python3 ai-collaboration-system.py create-workflow --project "fashion-store" --type "web-app"
+
+# 2. 各エージェントでタスク実行
+# CEO: ビジネス要件定義
+# CTO: 技術スタック決定（React + Node.js + PostgreSQL）
+# Frontend: Reactコンポーネント開発
+# Backend: REST API実装
+# DevOps: Docker化とKubernetes設定
+# QA: E2Eテスト自動化
+
+# 3. 進捗確認（Monitor windowで監視）
+```
+
+#### 7. システムの停止と再開
+
+```bash
+# セッションから離脱（バックグラウンドで継続）
+# tmux内で: Ctrl+B → D
+
+# AI組織を完全に停止
+./ai-org-master.sh stop
+
+# 既存セッションに再接続
+./ai-org-master.sh attach
+```
 
 ## 🤖 AI Agents
 
@@ -101,45 +202,48 @@ pip install -r requirements.txt
 - **AI-DevOps**: Docker、Kubernetes、CI/CD、監視
 - **AI-QA**: テスト自動化、品質保証、バグ検出
 
-## 📋 Commands
+## 📋 Commands Reference
 
 ### Master Control
 
 ```bash
-# AI組織を起動
-./ai-org-master.sh start
-
-# AI組織を停止
-./ai-org-master.sh stop
-
-# 既存セッションに接続
-./ai-org-master.sh attach
-
-# ヘルプを表示
-./ai-org-master.sh help
+./ai-org-master.sh start    # AI組織を起動
+./ai-org-master.sh stop     # AI組織を停止
+./ai-org-master.sh attach   # 既存セッションに接続
+./ai-org-master.sh help     # ヘルプを表示
 ```
 
 ### Project Management
 
 ```bash
-# 新規プロジェクト作成
-cd ai-org
-python3 knowledge/templates/project-generator.py
-
-# ワークフロー生成
+# 新規プロジェクト作成（プロジェクトタイプ: web-app, api, cli-tool）
 python3 ai-collaboration-system.py create-workflow --project "project-name" --type "web-app"
 
-# デイリースタンドアップ
+# デイリースタンドアップレポート生成
 python3 ai-collaboration-system.py standup
+
+# プロジェクトテンプレート生成
+python3 knowledge/templates/project-generator.py
 ```
 
-### Agent Control
+### Agent Commands
 
-各エージェントウィンドウで使用可能なコマンド:
+```bash
+tasks  # 割り当てられたタスクを表示
+start  # 自動実行モードを開始
+quit   # エージェントを終了
+```
 
-- `tasks` - 割り当てられたタスクを表示
-- `start` - エージェントループを開始
-- `quit` - エージェントを終了
+### tmux Commands
+
+| コマンド | 説明 |
+|---------|------|
+| `Ctrl+B` → `0-7` | ウィンドウ切り替え |
+| `Ctrl+B` → `D` | セッションから離脱 |
+| `Ctrl+B` → `[` | スクロールモード |
+| `Ctrl+B` → `%` | 画面を縦に分割 |
+| `Ctrl+B` → `"` | 画面を横に分割 |
+| `Ctrl+B` → `arrow` | ペイン間を移動 |
 
 ## 🔄 Workflow
 
@@ -170,6 +274,38 @@ python3 ai-collaboration-system.py standup
 
 ## 🛠️ Development
 
+### トラブルシューティング
+
+**tmuxセッションが見つからない場合**:
+```bash
+# セッション一覧を確認
+tmux ls
+
+# 古いセッションを削除
+tmux kill-session -t ai-org
+
+# 再起動
+./ai-org-master.sh start
+```
+
+**エージェントが応答しない場合**:
+```bash
+# 特定のウィンドウでエージェントを再起動
+# 例: CEOエージェントの再起動
+tmux send-keys -t ai-org:CEO C-c Enter
+tmux send-keys -t ai-org:CEO "python3 claude-code-agent.py ai-ceo" Enter
+```
+
+**タスクが正しく読み込まれない場合**:
+```bash
+# タスクファイルの確認
+ls -la ai-org/communication/tasks/
+
+# タスクの手動作成
+cd ai-org
+python3 ai-collaboration-system.py create-workflow --project "test-project" --type "web-app"
+```
+
 ### Adding New Agents
 
 1. `personas/`に新しいAI人格定義を追加
@@ -179,6 +315,16 @@ python3 ai-collaboration-system.py standup
 ### Custom Workflows
 
 `workflows/`ディレクトリにカスタムワークフローを定義可能
+
+### プロジェクトタイプの拡張
+
+新しいプロジェクトタイプを追加する場合は、`ai-collaboration-system.py`の`create_project_workflow`メソッドを拡張:
+
+```python
+if project_type == "mobile-app":
+    # モバイルアプリ用のタスクを定義
+    tasks.append(self.create_task(...))
+```
 
 ## 🤝 Contributing
 
