@@ -36,15 +36,10 @@ env/
 .DS_Store
 
 # AI Organization specific
-ai-org/logs/*.log
-ai-org/agents/*/agent-config.json
-ai-org/communication/messages/*.json
-ai-org/communication/tasks/*.json
-ai-org/communication/reports/*.json
-ai-org/workspace/projects/*/build/
-ai-org/workspace/projects/*/dist/
-ai-org/workspace/projects/*/node_modules/
-ai-org/workspace/shared/cache/
+ai-org/logs/
+ai-org/workspace/
+ai-org/communication/tasks/
+ai-org/communication/reports/
 
 # tmux
 .tmux-*
