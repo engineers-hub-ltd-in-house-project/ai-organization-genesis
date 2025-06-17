@@ -4,7 +4,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active-success)](https://github.com/yourusername/ai-organization-genesis)
+[![Status](https://img.shields.io/badge/status-active-success)](https://github.com/engineers-hub-ltd-in-house-project/ai-organization-genesis)
 
 ## 🎯 Overview
 
@@ -54,7 +54,7 @@ ai-org/
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/yourusername/ai-organization-genesis.git
+git clone https://github.com/engineers-hub-ltd-in-house-project/ai-organization-genesis.git
 cd ai-organization-genesis
 
 # 依存関係をインストール
