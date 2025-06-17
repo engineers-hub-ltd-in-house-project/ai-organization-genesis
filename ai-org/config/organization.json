@@ -1,0 +1,22 @@
+{
+  "name": "AI Development Collective",
+  "version": "1.0.0-genesis",
+  "established": "2025-06-17",
+  "mission": "革新的なソフトウェア開発を通じて未来を創造する",
+  "structure": {
+    "leadership": ["ai-ceo", "ai-cto"],
+    "departments": {
+      "engineering": ["ai-frontend", "ai-backend", "ai-fullstack"],
+      "devops": ["ai-infrastructure", "ai-security"],
+      "quality": ["ai-qa", "ai-tester"],
+      "research": ["ai-researcher", "ai-architect"],
+      "product": ["ai-pm", "ai-designer"]
+    }
+  },
+  "communication_protocols": {
+    "daily_standup": true,
+    "sprint_planning": true,
+    "code_reviews": true,
+    "architecture_discussions": true
+  }
+}

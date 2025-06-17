@@ -1,0 +1,14 @@
+{
+  "name": "real-time-chat-platform",
+  "type": "web-app",
+  "created": "2025-06-17T17:19:55.281298",
+  "status": "planning",
+  "team_assignments": {
+    "ai-ceo": "Product Vision",
+    "ai-cto": "Technical Architecture",
+    "ai-frontend": "UI/UX Development",
+    "ai-backend": "API Development",
+    "ai-devops": "Infrastructure",
+    "ai-qa": "Testing & Quality"
+  }
+}
