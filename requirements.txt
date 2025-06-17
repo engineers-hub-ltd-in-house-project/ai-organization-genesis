@@ -5,6 +5,10 @@
 dataclasses>=0.6
 typing-extensions>=4.0.0
 
+# Claude Code SDK (optional for real AI agent execution)
+claude-code-sdk>=0.0.10
+anyio>=4.0.0
+
 # Optional: For enhanced monitoring dashboard
 # windows-curses>=2.3.0  # Windows only
 # blessed>=1.19.0        # Alternative to curses

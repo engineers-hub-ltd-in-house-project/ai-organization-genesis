@@ -48,7 +48,8 @@ ai-org/
 - Python 3.8+
 - tmux
 - Git
-- Claude Code (オプション)
+- Node.js (Claude Codeを使用する場合)
+- Claude Code CLI (オプション、実際のAI実行用)
 
 ### Installation
 
@@ -59,12 +60,29 @@ cd ai-organization-genesis
 
 # 依存関係をインストール
 pip install -r requirements.txt
+# 注: claude-code-sdkとanyioが含まれています（実AIモード用）
 
 # AI組織を生成
 ./ai-org-genesis.sh
 
 # AI組織を起動
 ./ai-org-master.sh start
+```
+
+### 🎮 動作モード
+
+#### シミュレーションモード（デフォルト）
+Claude Codeがインストールされていない環境でも動作確認が可能。タスクの実行をシミュレートします。
+
+#### 実AIモード
+実際のClaude Codeを使用してAIがコードを生成します。
+
+```bash
+# 実AIモードを有効にする
+export USE_REAL_CLAUDE=true
+
+# Claude Code CLIのインストール（必要な場合）
+npm install -g @anthropic-ai/claude-code
 ```
 
 ### Usage
@@ -304,6 +322,25 @@ ls -la ai-org/communication/tasks/
 # タスクの手動作成
 cd ai-org
 python3 ai-collaboration-system.py create-workflow --project "test-project" --type "web-app"
+```
+
+**Claude Code SDKエラーの場合**:
+```bash
+# 依存関係を再インストール
+pip install -r requirements.txt
+
+# シミュレーションモードで実行
+unset USE_REAL_CLAUDE
+```
+
+**ディレクトリ構造の問題**:
+```bash
+# 入れ子のai-orgディレクトリが作成された場合
+rm -rf ai-org/ai-org
+
+# 正しいディレクトリから実行
+cd ai-org
+pwd  # /path/to/ai-organization-genesis/ai-org であることを確認
 ```
 
 ### Adding New Agents

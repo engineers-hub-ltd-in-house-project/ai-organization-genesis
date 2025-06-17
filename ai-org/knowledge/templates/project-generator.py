@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 class ProjectGenerator:
-    def __init__(self, workspace_dir: str = "ai-org"):
+    def __init__(self, workspace_dir: str = "."):
         self.workspace_dir = workspace_dir
         self.projects_dir = f"{workspace_dir}/workspace/projects"
     

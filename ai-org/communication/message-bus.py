@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 class AIMessageBus:
-    def __init__(self, workspace_dir: str = "ai-org"):
+    def __init__(self, workspace_dir: str = "."):
         self.workspace_dir = workspace_dir
         self.messages_dir = f"{workspace_dir}/communication/messages"
         self.ensure_directories()

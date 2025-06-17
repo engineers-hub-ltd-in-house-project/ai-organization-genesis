@@ -1,7 +1,7 @@
 {
-  "name": "ai-powered-ecommerce",
-  "type": "web-app",
-  "created": "2025-06-17T17:19:55.280844",
+  "name": "ai-code-reviewer",
+  "type": "cli-tool",
+  "created": "2025-06-17T23:17:26.867444",
   "status": "planning",
   "team_assignments": {
     "ai-ceo": "Product Vision",

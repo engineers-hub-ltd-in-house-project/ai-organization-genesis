@@ -7,11 +7,18 @@ Claude Code AI Agent Wrapper
 import json
 import os
 import time
+import anyio
 from typing import Dict, List, Any
 from datetime import datetime
+try:
+    from claude_code_sdk import query, ClaudeCodeOptions, Message
+    CLAUDE_SDK_AVAILABLE = True
+except ImportError:
+    CLAUDE_SDK_AVAILABLE = False
+    print("⚠️  Claude Code SDK not installed. Running in simulation mode.")
 
 class ClaudeCodeAgent:
-    def __init__(self, agent_name: str, workspace_dir: str = "ai-org"):
+    def __init__(self, agent_name: str, workspace_dir: str = "."):
         self.agent_name = agent_name
         self.workspace_dir = workspace_dir
         self.agent_dir = f"{workspace_dir}/agents/{agent_name}"
@@ -87,8 +94,15 @@ class ClaudeCodeAgent:
         # Claude Code用のプロンプトを生成
         prompt = self.generate_claude_code_prompt(task)
         
-        # 実行シミュレーション（実際の環境ではClaude Codeコマンド実行）
-        result = self.simulate_claude_code_execution(task)
+        # 実際のClaude Codeコマンドを実行するか、シミュレーションを選択
+        use_real_claude = os.environ.get('USE_REAL_CLAUDE', 'false').lower() == 'true'
+        
+        if use_real_claude and CLAUDE_SDK_AVAILABLE:
+            # 非同期実行のためのラッパー
+            result = anyio.run(self.execute_with_real_claude, task, prompt)
+        else:
+            # シミュレーションモード
+            result = self.simulate_claude_code_execution(task)
         
         if result['success']:
             self.update_task_status(task['id'], 'completed')
@@ -98,6 +112,59 @@ class ClaudeCodeAgent:
             print(f"❌ {self.agent_name} failed task: {task['title']}")
         
         return result
+    
+    async def execute_with_real_claude(self, task: Dict, prompt: str) -> Dict[str, Any]:
+        """実際のClaude Code SDKを使ってタスクを実行"""
+        if not CLAUDE_SDK_AVAILABLE:
+            print("⚠️  Claude Code SDK not available. Falling back to simulation.")
+            return self.simulate_claude_code_execution(task)
+        
+        try:
+            messages = []
+            project_dir = f"{self.workspace_dir}/workspace/projects/{task['project']}"
+            os.makedirs(project_dir, exist_ok=True)
+            
+            # Claude Codeオプションを設定
+            options = ClaudeCodeOptions(
+                max_turns=10,
+                system_prompt=f"You are {self.agent_name}, an AI agent specialized in {', '.join(self.config['capabilities'])}. Work in the project directory: {project_dir}",
+                cwd=project_dir,
+                permission_mode="autoApprove"  # 自動承認モード
+            )
+            
+            # Claude Codeクエリを実行
+            async for message in query(prompt, options):
+                messages.append(message)
+            
+            # 結果を解析
+            success = len(messages) > 0
+            output_files = []
+            
+            # 作成されたファイルをチェック
+            if os.path.exists(project_dir):
+                for root, dirs, files in os.walk(project_dir):
+                    for file in files:
+                        rel_path = os.path.relpath(os.path.join(root, file), project_dir)
+                        output_files.append(rel_path)
+            
+            return {
+                'success': success,
+                'output_files': output_files,
+                'summary': f"Task completed with {len(messages)} Claude interactions",
+                'metrics': {
+                    'files_created': len(output_files),
+                    'claude_messages': len(messages)
+                }
+            }
+            
+        except Exception as e:
+            print(f"❌ Error executing with Claude Code: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e),
+                'summary': f"Failed to execute task: {str(e)}",
+                'metrics': {}
+            }
     
     def generate_claude_code_prompt(self, task: Dict) -> str:
         """Claude Code用のプロンプトを生成"""
@@ -181,12 +248,25 @@ def main():
     
     parser = argparse.ArgumentParser(description="Claude Code AI Agent")
     parser.add_argument("agent_name", help="Agent name (ai-ceo, ai-cto, etc.)")
-    parser.add_argument("--workspace", default="ai-org", help="Workspace directory")
+    parser.add_argument("--workspace", default=".", help="Workspace directory")
+    parser.add_argument("--mode", choices=["interactive", "batch"], default="interactive", help="Run mode")
+    parser.add_argument("--command", help="Command to run in batch mode")
     
     args = parser.parse_args()
     
     agent = ClaudeCodeAgent(args.agent_name, args.workspace)
     
+    if args.mode == "batch":
+        # バッチモード
+        if args.command == "tasks":
+            tasks = agent.check_tasks()
+            for task in tasks:
+                print(f"📋 {task['title']} (Status: {task['status']})")
+        elif args.command == "start":
+            agent.start_agent_loop()
+        return
+    
+    # インタラクティブモード
     print(f"🤖 {args.agent_name} agent ready")
     print("Commands: 'tasks', 'start', 'quit'")
     
